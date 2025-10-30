@@ -87,6 +87,26 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
                     egui::Stroke::NONE,
                 ));
             }
+            PointShape::Semicircle => {
+                let r = config.point_radius;
+                let segments = 16; // More segments = smoother curve
+
+                let mut points = Vec::new();
+
+                // Create semi-circle from 0 to π (top half) or π to 2π (bottom half)
+                for i in 0..=segments {
+                    let angle = std::f32::consts::PI * i as f32 / segments as f32; // 0 to π for top half
+                    let x = pos.x + r * angle.cos();
+                    let y = pos.y - r * angle.sin(); // negative for top half
+                    points.push(egui::pos2(x, y));
+                }
+
+                painter.add(egui::Shape::convex_polygon(
+                    points,
+                    color,
+                    egui::Stroke::NONE,
+                ));
+            }
         }
     }
 

@@ -182,7 +182,7 @@ impl AppState {
                 rect.contains(egui::pos2(pt.x - radius, pt.y + radius)) &&
                 rect.contains(egui::pos2(pt.x + radius, pt.y - radius))
             }
-            PointShape::Diamond => {
+            PointShape::Diamond | PointShape::Semicircle => {
                 rect.contains(egui::pos2(pt.x, pt.y - radius)) &&
                 rect.contains(egui::pos2(pt.x + radius, pt.y)) &&
                 rect.contains(egui::pos2(pt.x, pt.y + radius)) &&

@@ -11,6 +11,8 @@ Points can be:
 - different shapes and switched from one to the other with <kbd>S</kbd> + the shape key:
   - <kbd>C</kbd> for circle
   - <kbd>S</kbd> for square
+  - <kbd>D</kbd> for diamond (square rotated 45°)
+  - <kbd>H</kbd> for semi-circle (half-circle)
 - cloned,
   - in-place with <kbd>C</kbd>×2
   - in the dirrection of an arrow key with <kbd>C</kbd>+{<kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd>}

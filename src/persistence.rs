@@ -9,6 +9,7 @@ pub enum PointShape {
     Circle,
     Square,
     Diamond,
+    Semicircle,
 }
 
 #[derive(Facet, Clone)]
@@ -30,6 +31,7 @@ pub fn load_points() -> Vec<Point> {
         Point { id: 1, x: 400.0, y: 200.0, shape: PointShape::Circle },
         Point { id: 2, x: 500.0, y: 300.0, shape: PointShape::Square },
         Point { id: 3, x: 600.0, y: 400.0, shape: PointShape::Diamond },
+        Point { id: 4, x: 800.0, y: 500.0, shape: PointShape::Semicircle },
     ]
 }
 
