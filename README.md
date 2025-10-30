@@ -2,7 +2,7 @@
 
 A point canvas with JSON storage
 
-## Artist Statement
+## “Points”
 
 Pts is a GUI for creating, manipulating, and arranging points on a canvas.
 
@@ -13,7 +13,7 @@ Points can be:
   - <kbd>S</kbd> for square
 - cloned,
   - in-place with <kbd>C</kbd>×2
-  - in the dirrection of an arrow key with <kbd>C</kbd>+{<kbd>←</kbd><kbd>↑</kbd>→<kbd></kbd><kbd>↓</kbd>}
+  - in the dirrection of an arrow key with <kbd>C</kbd>+{<kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd>}
 - locked to a grid of lines, toggled with <kbd>G</kbd>
 - selected one at a time, or multiple at a time by either:
   - <kbd>B</kbd>ox selection by holding the mouse to drag a bounding box
