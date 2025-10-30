@@ -2,6 +2,8 @@
 
 A point canvas with JSON storage
 
+![](https://github.com/user-attachments/assets/cf84bcc8-a073-4da3-b3df-d19ce2ce9ee3)
+
 ## _“Points”_
 
 Pts is a GUI for creating, manipulating, and arranging points on a canvas.
