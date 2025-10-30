@@ -17,7 +17,7 @@ Points can be:
 - locked to a grid of lines, toggled with <kbd>G</kbd>
 - selected one at a time, or multiple at a time by either:
   - <kbd>B</kbd>ox selection by holding the mouse to drag a bounding box
-  - flood fill (also in <kbd>B</kbd> mode) in a particular direction (<kbd>←</kbd><kbd>↑</kbd>→<kbd></kbd><kbd>↓</kbd>),
+  - flood fill (also in <kbd>B</kbd> mode) in a particular direction (<kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd>),
 - saved to JSON (`points.json`) and re-loaded.
 
 ## Usage
@@ -34,7 +34,7 @@ Points can be:
 
 ## Installation
 
-crates.io TODO
+crates.io is still TODO
 
 ```sh
 cargo install --path .
@@ -72,7 +72,7 @@ move_step_large = 8.0
 - Mouse drag: Move selected points (quantized to `move_step`)
 
 ### Cloning
-- <kbd>C</kbd> then <kbd></kbd>C: Clone selected points on top
+- <kbd>C</kbd> then <kbd>C</kbd>: Clone selected points on top
 - <kbd>C</kbd> then <kbd>Arrow</kbd>: Clone adjacent (offset by bounding box size)
 
 ### Shapes
@@ -113,7 +113,8 @@ When snap-to-grid mode is enabled (<kbd>G</kbd>), point boundaries snap to the n
 - Dragging or arrow moving a selected point moves all selected points together
 - Cloning creates copies of all selected points
 - Shape changes apply to all selected points
-- Delete removes all selected points, then selects most recently created remaining point (often not very well: TOFIX!)
+- Delete removes all selected points, then selects most recently created remaining point
+  - ...often not very well: TOFIX!
 
 ## Ingredients
 
