@@ -85,7 +85,7 @@ move_step_large = 8.0
 - <kbd>Ctrl</kbd> + <kbd>Scroll</kbd>: Zoom (0.1x to 10x)
 
 ### Other
-- <kbd></kbd>D: Delete selected points
+- <kbd>X</kbd>: Delete selected points
 - <kbd>?: Show</kbd> help window
 - <kbd>Ctrl</kbd> + <kbd>S</kbd>: Save points to `points.json`
 - <kbd>Ctrl</kbd> + <kbd>O</kbd>: Load points from file
@@ -98,8 +98,9 @@ Points are saved to `points.json` in the working directory:
 ```json
 {
   "points": [
-    {"id": 1, "x": 100.0, "y": 100.0, "shape": "Circle"},
-    {"id": 2, "x": 200.0, "y": 200.0, "shape": "Square"}
+    {"id": 1, "x": 200.0, "y": 100.0, "shape": "Circle"},
+    {"id": 2, "x": 400.0, "y": 200.0, "shape": "Square"}
+    {"id": 3, "x": 600.0, "y": 300.0, "shape": "Diamond"}
   ]
 }
 ```

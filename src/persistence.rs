@@ -8,6 +8,7 @@ const POINTS_FILE: &str = "points.json";
 pub enum PointShape {
     Circle,
     Square,
+    Diamond,
 }
 
 #[derive(Facet, Clone)]
@@ -26,9 +27,9 @@ struct Points {
 pub fn load_points() -> Vec<Point> {
     let _ = fs::remove_file(POINTS_FILE);
     vec![
-        Point { id: 1, x: 100.0, y: 100.0, shape: PointShape::Circle },
-        Point { id: 2, x: 200.0, y: 200.0, shape: PointShape::Circle },
-        Point { id: 3, x: 300.0, y: 150.0, shape: PointShape::Square },
+        Point { id: 1, x: 400.0, y: 200.0, shape: PointShape::Circle },
+        Point { id: 2, x: 500.0, y: 300.0, shape: PointShape::Square },
+        Point { id: 3, x: 600.0, y: 400.0, shape: PointShape::Diamond },
     ]
 }
 

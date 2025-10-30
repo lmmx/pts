@@ -83,7 +83,8 @@ pub fn show_help_window(ctx: &egui::Context, state: &mut AppState) {
                 ui.label("C then Arrow: Clone adjacent");
                 ui.label("S then C: Set shape to Circle");
                 ui.label("S then S: Set shape to Square");
-                ui.label("D: Delete selected");
+                ui.label("S then D: Set shape to Diamond");
+                ui.label("X: Delete selected");
                 ui.label("G: Toggle snap-to-grid");
                 ui.label("V then G: Toggle grid visibility");
                 ui.label("Ctrl + Scroll: Zoom");
@@ -135,7 +136,7 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
         state.points = persistence::load_points();
     }
 
-    if ctx.input(|i| i.key_pressed(egui::Key::D)) {
+    if ctx.input(|i| i.key_pressed(egui::Key::X)) {
         state.delete_selected();
     }
 
@@ -175,6 +176,9 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
     } else if state.pending_shape {
         if ctx.input(|i| i.key_pressed(egui::Key::C)) {
             state.set_selected_shape(PointShape::Circle);
+            state.pending_shape = false;
+        } else if ctx.input(|i| i.key_pressed(egui::Key::D)) {
+            state.set_selected_shape(PointShape::Diamond);
             state.pending_shape = false;
         }
     } else if ctx.input(|i| i.key_pressed(egui::Key::C)) {

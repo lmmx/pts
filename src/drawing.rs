@@ -73,6 +73,20 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
                 );
                 painter.rect_filled(rect, 0.0, color);
             }
+            PointShape::Diamond => {
+                let r = config.point_radius;
+                let points = vec![
+                    egui::pos2(pos.x, pos.y - r),
+                    egui::pos2(pos.x + r, pos.y),
+                    egui::pos2(pos.x, pos.y + r),
+                    egui::pos2(pos.x - r, pos.y),
+                ];
+                painter.add(egui::Shape::convex_polygon(
+                    points,
+                    color,
+                    egui::Stroke::NONE,
+                ));
+            }
         }
     }
 
