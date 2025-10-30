@@ -313,7 +313,7 @@ impl AppState {
         }
 
         let shape = self.get_paint_shape();
-        let mut new_point = Point {
+        let new_point = Point {
             id: self.next_id,
             x: quantized_x,
             y: quantized_y,

@@ -7,7 +7,6 @@ check:
 clippy:
     cargo clippy --workspace --all-targets --all-features --target-dir target/clippy-all-features -- -D warnings
 
-[working-directory: 'crates/']
 test *args:
     cargo nextest run {{args}}
 
