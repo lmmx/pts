@@ -1,0 +1,59 @@
+[[bin]]
+name = "pts"
+path = "src/main.rs"
+
+[dependencies]
+eframe = "0.29"
+facet = "0.30"
+facet-json = "0.30"
+facet-toml = "0.30"
+
+[package]
+authors = ["Louis Maddox <louismmx@gmail.com>"]
+categories = ["gui", "graphics"]
+description = "GUI to create, manipulate, and arrange points on a canvas"
+documentation = "https://docs.rs/pts/"
+edition = "2021"
+homepage = "https://github.com/lmmx/pts"
+keywords = ["gui", "egui", "canvas", "points", "drawing", "paintbrush"]
+license = "MIT"
+name = "pts"
+readme = "README.md"
+repository = "https://github.com/lmmx/pts"
+rust-version = "1.90"
+version = "0.1.0"
+
+[profile.dev]
+codegen-units = 256
+debug = false
+lto = false
+opt-level = 0
+strip = "debuginfo"
+
+[profile.release]
+codegen-units = 1
+debug = false
+lto = "thin"
+opt-level = 2
+strip = "symbols"
+
+[lints.clippy]
+all = "deny"
+pedantic = "deny"
+cargo = "deny"
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "deny"
+
+[package.metadata.binstall]
+pkg-fmt = "tgz"
+pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-{ target }-v{ version }.tar.gz"
+
+[package.metadata.binstall.overrides.aarch64-pc-windows-msvc]
+pkg-fmt = "zip"
+pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-aarch64-pc-windows-msvc-v{ version }.zip"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-x86_64-pc-windows-msvc-v{ version }.zip"
