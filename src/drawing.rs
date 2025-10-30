@@ -60,7 +60,7 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
         } else {
             point_color
         };
-        
+
         match pt.shape {
             PointShape::Circle => {
                 painter.circle_filled(pos, config.point_radius, color);
@@ -75,7 +75,7 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
             }
         }
     }
-    
+
     if let (Some(start), Some(end)) = (state.box_select_start, state.box_select_end) {
         let box_color = config.parse_color(&config.selection_box_color);
         let rect = egui::Rect::from_two_pos(start, end);

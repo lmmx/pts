@@ -1,4 +1,4 @@
-/// pts: A point canvas with JSON storage.
+//! pts: A point canvas with JSON storage.
 use eframe::egui;
 
 mod config;
@@ -105,12 +105,12 @@ impl eframe::App for PointDragger {
                                 let quantized_y = state::AppState::quantize_position(pos.y, self.config.move_step);
                                 let dx = quantized_x - old_pos.0;
                                 let dy = quantized_y - old_pos.1;
-                                
+
                                 for idx in selected {
                                     self.state.points[idx].x += dx;
                                     self.state.points[idx].y += dy;
                                 }
-                                
+
                                 if self.state.snap_to_grid {
                                     self.state.snap_to_grid(self.config.grid_spacing, self.config.point_radius);
                                 }

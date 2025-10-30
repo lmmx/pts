@@ -85,23 +85,23 @@ impl AppState {
             let right = pt.x + radius;
             let top = pt.y - radius;
             let bottom = pt.y + radius;
-            
+
             let left_snap = (left / grid_spacing).round() * grid_spacing;
             let right_snap = (right / grid_spacing).round() * grid_spacing;
             let top_snap = (top / grid_spacing).round() * grid_spacing;
             let bottom_snap = (bottom / grid_spacing).round() * grid_spacing;
-            
+
             let left_dist = (left - left_snap).abs();
             let right_dist = (right - right_snap).abs();
             let top_dist = (top - top_snap).abs();
             let bottom_dist = (bottom - bottom_snap).abs();
-            
+
             if left_dist < right_dist {
                 pt.x = left_snap + radius;
             } else {
                 pt.x = right_snap - radius;
             }
-            
+
             if top_dist < bottom_dist {
                 pt.y = top_snap + radius;
             } else {
@@ -117,7 +117,7 @@ impl AppState {
     pub fn clone_selected(&mut self, dx: f32, dy: f32) {
         let indices = self.selected_indices();
         let mut new_points = Vec::new();
-        
+
         for idx in indices {
             let pt = &self.points[idx];
             new_points.push(Point {
@@ -128,10 +128,10 @@ impl AppState {
             });
             self.next_id += 1;
         }
-        
+
         let start_idx = self.points.len();
         self.points.extend(new_points);
-        
+
         if self.points.len() - start_idx == 1 {
             self.selection = Selection::Single(start_idx);
         } else {
@@ -150,14 +150,14 @@ impl AppState {
         if indices.is_empty() {
             return;
         }
-        
+
         let mut indices_sorted = indices.clone();
         indices_sorted.sort_by(|a, b| b.cmp(a));
-        
+
         for idx in indices_sorted {
             self.points.remove(idx);
         }
-        
+
         if self.points.is_empty() {
             self.selection = Selection::None;
         } else {
@@ -192,7 +192,7 @@ impl AppState {
                 selected.push(idx);
             }
         }
-        
+
         self.selection = if selected.is_empty() {
             Selection::None
         } else if selected.len() == 1 {
@@ -207,9 +207,9 @@ impl AppState {
         if indices.is_empty() {
             return (0.0, 0.0);
         }
-        
+
         let (dx, dy) = direction;
-        
+
         if dx.abs() > 0.0 {
             let mut min_x = f32::MAX;
             let mut max_x = f32::MIN;
@@ -246,7 +246,7 @@ impl AppState {
                 pt.x + direction.0 * radius * 2.0,
                 pt.y + direction.1 * radius * 2.0,
             );
-            
+
             for (i, other) in self.points.iter().enumerate() {
                 let dist_sq = (other.x - search_pos.x).powi(2) + (other.y - search_pos.y).powi(2);
                 if dist_sq < (radius * 2.5).powi(2) {
@@ -261,7 +261,7 @@ impl AppState {
                 all_selected.push(c);
             }
         }
-        
+
         self.selection = if all_selected.len() == 1 {
             Selection::Single(all_selected[0])
         } else {
@@ -302,16 +302,16 @@ impl AppState {
     pub fn paint_point(&mut self, pos: egui::Pos2, radius: f32, move_step: f32, grid_spacing: f32, snap: bool) {
         let quantized_x = Self::quantize_position(pos.x, move_step);
         let quantized_y = Self::quantize_position(pos.y, move_step);
-        
+
         if let Some(last_pos) = self.last_paint_pos {
             let dx = (quantized_x - last_pos.x).abs();
             let dy = (quantized_y - last_pos.y).abs();
-            
+
             if dx < radius * 2.0 && dy < radius * 2.0 {
                 return;
             }
         }
-        
+
         let shape = self.get_paint_shape();
         let mut new_point = Point {
             id: self.next_id,
@@ -319,10 +319,10 @@ impl AppState {
             y: quantized_y,
             shape,
         };
-        
+
         self.next_id += 1;
         self.points.push(new_point.clone());
-        
+
         if snap {
             let idx = self.points.len() - 1;
             let temp_selection = self.selection.clone();
@@ -330,7 +330,7 @@ impl AppState {
             self.snap_to_grid(grid_spacing, radius);
             self.selection = temp_selection;
         }
-        
+
         self.last_paint_pos = Some(egui::pos2(quantized_x, quantized_y));
     }
 }
