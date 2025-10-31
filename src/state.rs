@@ -1,5 +1,5 @@
-use eframe::egui;
 use crate::persistence::{Point, PointShape};
+use eframe::egui;
 use facet::Facet;
 
 #[derive(Clone, Facet)]
@@ -90,32 +90,26 @@ impl AppState {
     pub fn snap_to_grid(&mut self, grid_spacing: f32, radius: f32) {
         for idx in self.selected_indices() {
             let pt = &mut self.points[idx];
-            let left = pt.x - radius;
-            let right = pt.x + radius;
-            let top = pt.y - radius;
-            let bottom = pt.y + radius;
 
-            let left_snap = (left / grid_spacing).round() * grid_spacing;
-            let right_snap = (right / grid_spacing).round() * grid_spacing;
-            let top_snap = (top / grid_spacing).round() * grid_spacing;
-            let bottom_snap = (bottom / grid_spacing).round() * grid_spacing;
+            let snap_edge = |edge: f32| -> f32 { (edge / grid_spacing).round() * grid_spacing };
 
-            let left_dist = (left - left_snap).abs();
-            let right_dist = (right - right_snap).abs();
-            let top_dist = (top - top_snap).abs();
-            let bottom_dist = (bottom - bottom_snap).abs();
+            let edges = [
+                (pt.x - radius, pt.x + radius),
+                (pt.y - radius, pt.y + radius),
+            ];
 
-            if left_dist < right_dist {
-                pt.x = left_snap + radius;
-            } else {
-                pt.x = right_snap - radius;
-            }
+            let snapped = edges.map(|(min, max)| {
+                let min_snap = snap_edge(min);
+                let max_snap = snap_edge(max);
+                if (min - min_snap).abs() < (max - max_snap).abs() {
+                    min_snap + radius
+                } else {
+                    max_snap - radius
+                }
+            });
 
-            if top_dist < bottom_dist {
-                pt.y = top_snap + radius;
-            } else {
-                pt.y = bottom_snap - radius;
-            }
+            pt.x = snapped[0];
+            pt.y = snapped[1];
         }
     }
 
@@ -180,16 +174,16 @@ impl AppState {
         let pt = &self.points[idx];
         match pt.shape {
             PointShape::Circle | PointShape::Square => {
-                rect.contains(egui::pos2(pt.x - radius, pt.y - radius)) &&
-                rect.contains(egui::pos2(pt.x + radius, pt.y + radius)) &&
-                rect.contains(egui::pos2(pt.x - radius, pt.y + radius)) &&
-                rect.contains(egui::pos2(pt.x + radius, pt.y - radius))
+                rect.contains(egui::pos2(pt.x - radius, pt.y - radius))
+                    && rect.contains(egui::pos2(pt.x + radius, pt.y + radius))
+                    && rect.contains(egui::pos2(pt.x - radius, pt.y + radius))
+                    && rect.contains(egui::pos2(pt.x + radius, pt.y - radius))
             }
             PointShape::Diamond | PointShape::Semicircle => {
-                rect.contains(egui::pos2(pt.x, pt.y - radius)) &&
-                rect.contains(egui::pos2(pt.x + radius, pt.y)) &&
-                rect.contains(egui::pos2(pt.x, pt.y + radius)) &&
-                rect.contains(egui::pos2(pt.x - radius, pt.y))
+                rect.contains(egui::pos2(pt.x, pt.y - radius))
+                    && rect.contains(egui::pos2(pt.x + radius, pt.y))
+                    && rect.contains(egui::pos2(pt.x, pt.y + radius))
+                    && rect.contains(egui::pos2(pt.x - radius, pt.y))
             }
         }
     }
@@ -220,26 +214,26 @@ impl AppState {
         let (dx, dy) = direction;
 
         if dx.abs() > 0.0 {
-            let mut min_x = f32::MAX;
-            let mut max_x = f32::MIN;
-            for idx in &indices {
-                let pt = &self.points[*idx];
-                min_x = min_x.min(pt.x - radius);
-                max_x = max_x.max(pt.x + radius);
-            }
-            let width = max_x - min_x;
-            (dx * width, 0.0)
+            let (min, max) = self.bounds_along_axis(|pt| pt.x, &indices, radius);
+            (dx * (max - min), 0.0)
         } else {
-            let mut min_y = f32::MAX;
-            let mut max_y = f32::MIN;
-            for idx in &indices {
-                let pt = &self.points[*idx];
-                min_y = min_y.min(pt.y - radius);
-                max_y = max_y.max(pt.y + radius);
-            }
-            let height = max_y - min_y;
-            (0.0, dy * height)
+            let (min, max) = self.bounds_along_axis(|pt| pt.y, &indices, radius);
+            (0.0, dy * (max - min))
         }
+    }
+
+    fn bounds_along_axis<F>(&self, axis: F, indices: &[usize], radius: f32) -> (f32, f32)
+    where
+        F: Fn(&Point) -> f32,
+    {
+        let mut min = f32::MAX;
+        let mut max = f32::MIN;
+        for idx in indices {
+            let val = axis(&self.points[*idx]);
+            min = min.min(val - radius);
+            max = max.max(val + radius);
+        }
+        (min, max)
     }
 
     pub fn expand_selection_box(&mut self, direction: (f32, f32), radius: f32) {
@@ -308,7 +302,14 @@ impl AppState {
         }
     }
 
-    pub fn paint_point(&mut self, pos: egui::Pos2, radius: f32, move_step: f32, grid_spacing: f32, snap: bool) {
+    pub fn paint_point(
+        &mut self,
+        pos: egui::Pos2,
+        radius: f32,
+        move_step: f32,
+        grid_spacing: f32,
+        snap: bool,
+    ) {
         let quantized_x = Self::quantize_position(pos.x, move_step);
         let quantized_y = Self::quantize_position(pos.y, move_step);
 

@@ -3,9 +3,9 @@
 use eframe::egui;
 
 mod config;
+mod drawing;
 mod persistence;
 mod state;
-mod drawing;
 mod ui;
 
 struct PointDragger {
@@ -58,7 +58,9 @@ impl eframe::App for PointDragger {
                 }
 
                 if response.drag_stopped() {
-                    if let (Some(start), Some(end)) = (self.state.box_select_start, self.state.box_select_end) {
+                    if let (Some(start), Some(end)) =
+                        (self.state.box_select_start, self.state.box_select_end)
+                    {
                         let rect = egui::Rect::from_two_pos(start, end);
                         self.state.select_in_box(rect, self.config.point_radius);
                     }
@@ -97,34 +99,38 @@ impl eframe::App for PointDragger {
                     }
                 }
 
-                if response.dragged()
-                    && self.state.dragging.is_some() {
-                        if let Some(pos) = response.interact_pointer_pos() {
-                            let selected = self.state.selected_indices();
-                            if let Some(drag_idx) = self.state.dragging {
-                                let old_pos = (self.state.points[drag_idx].x, self.state.points[drag_idx].y);
-                                let quantized_x = state::AppState::quantize_position(pos.x, self.config.move_step);
-                                let quantized_y = state::AppState::quantize_position(pos.y, self.config.move_step);
-                                let dx = quantized_x - old_pos.0;
-                                let dy = quantized_y - old_pos.1;
+                if response.dragged() && self.state.dragging.is_some() {
+                    if let Some(pos) = response.interact_pointer_pos() {
+                        let selected = self.state.selected_indices();
+                        if let Some(drag_idx) = self.state.dragging {
+                            let old_pos =
+                                (self.state.points[drag_idx].x, self.state.points[drag_idx].y);
+                            let quantized_x =
+                                state::AppState::quantize_position(pos.x, self.config.move_step);
+                            let quantized_y =
+                                state::AppState::quantize_position(pos.y, self.config.move_step);
+                            let dx = quantized_x - old_pos.0;
+                            let dy = quantized_y - old_pos.1;
 
-                                for idx in selected {
-                                    self.state.points[idx].x += dx;
-                                    self.state.points[idx].y += dy;
-                                }
+                            for idx in selected {
+                                self.state.points[idx].x += dx;
+                                self.state.points[idx].y += dy;
+                            }
 
-                                if self.state.snap_to_grid {
-                                    self.state.snap_to_grid(self.config.grid_spacing, self.config.point_radius);
-                                }
+                            if self.state.snap_to_grid {
+                                self.state.snap_to_grid(
+                                    self.config.grid_spacing,
+                                    self.config.point_radius,
+                                );
                             }
                         }
                     }
+                }
 
-                if response.drag_stopped()
-                    && self.state.dragging.is_some() {
-                        persistence::save_points(&self.state.points);
-                        self.state.dragging = None;
-                    }
+                if response.drag_stopped() && self.state.dragging.is_some() {
+                    persistence::save_points(&self.state.points);
+                    self.state.dragging = None;
+                }
 
                 if response.clicked() {
                     if let Some(pos) = response.interact_pointer_pos() {

@@ -14,7 +14,11 @@ pub fn show_status_bar(ctx: &egui::Context, state: &AppState) {
                     .rounding(4.0)
                     .show(ui, |ui| {
                         ui.set_min_width(80.0);
-                        ui.label(egui::RichText::new(status).color(egui::Color32::WHITE).size(16.0));
+                        ui.label(
+                            egui::RichText::new(status)
+                                .color(egui::Color32::WHITE)
+                                .size(16.0),
+                        );
                     });
             });
     }
@@ -57,7 +61,10 @@ pub fn show_tool_panel(ctx: &egui::Context, config: &Config, _state: &mut AppSta
 
         ui.label("Movement");
         ui.label(format!("Move Step: {} (Arrow)", config.move_step));
-        ui.label(format!("Large Step: {} (Shift + Arrow)", config.move_step_large));
+        ui.label(format!(
+            "Large Step: {} (Shift + Arrow)",
+            config.move_step_large
+        ));
         ui.separator();
 
         ui.label("Appearance");
@@ -141,25 +148,46 @@ pub fn show_help_window(ctx: &egui::Context, state: &mut AppState) {
 }
 
 fn toggle_mode(current: InteractionMode, target: InteractionMode) -> InteractionMode {
-    if current == target { InteractionMode::Normal } else { target }
+    if current == target {
+        InteractionMode::Normal
+    } else {
+        target
+    }
 }
 
 fn toggle_pending(current: PendingMode, target: PendingMode) -> PendingMode {
-    if current == target { PendingMode::None } else { target }
+    if current == target {
+        PendingMode::None
+    } else {
+        target
+    }
 }
 
 fn handle_arrow_keys<F>(ctx: &egui::Context, mut handler: F)
-where F: FnMut(f32, f32)
+where
+    F: FnMut(f32, f32),
 {
-    if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) { handler(-1.0, 0.0); }
-    if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) { handler(1.0, 0.0); }
-    if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) { handler(0.0, -1.0); }
-    if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) { handler(0.0, 1.0); }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
+        handler(-1.0, 0.0);
+    }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
+        handler(1.0, 0.0);
+    }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
+        handler(0.0, -1.0);
+    }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
+        handler(0.0, 1.0);
+    }
 }
 
 pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut Config) {
     let shift = ctx.input(|i| i.modifiers.shift);
-    let step = if shift { config.move_step_large } else { config.move_step };
+    let step = if shift {
+        config.move_step_large
+    } else {
+        config.move_step
+    };
 
     if ctx.input(|i| i.key_pressed(egui::Key::G)) {
         if state.pending_mode == PendingMode::View {

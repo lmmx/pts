@@ -1,5 +1,5 @@
-use facet::Facet;
 use eframe::egui;
+use facet::Facet;
 
 #[derive(Facet, Clone)]
 pub struct Config {

@@ -1,17 +1,11 @@
 use crate::config::Config;
-use crate::state::AppState;
 use crate::persistence::PointShape;
+use crate::state::AppState;
 use eframe::egui;
 
-pub fn draw_canvas(
-    ui: &mut egui::Ui,
-    state: &AppState,
-    config: &Config,
-) -> egui::Response {
-    let (response, painter) = ui.allocate_painter(
-        ui.available_size(),
-        egui::Sense::click_and_drag(),
-    );
+pub fn draw_canvas(ui: &mut egui::Ui, state: &AppState, config: &Config) -> egui::Response {
+    let (response, painter) =
+        ui.allocate_painter(ui.available_size(), egui::Sense::click_and_drag());
 
     let bg = Config::parse_colour(&config.bg_color);
     painter.rect_filled(response.rect, 0.0, bg);
@@ -68,10 +62,7 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
             }
             PointShape::Square => {
                 let half = config.point_radius;
-                let rect = egui::Rect::from_center_size(
-                    pos,
-                    egui::vec2(half * 2.0, half * 2.0),
-                );
+                let rect = egui::Rect::from_center_size(pos, egui::vec2(half * 2.0, half * 2.0));
                 painter.rect_filled(rect, 0.0, color);
             }
             PointShape::Diamond => {
