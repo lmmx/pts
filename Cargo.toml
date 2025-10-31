@@ -21,7 +21,19 @@ name = "pts"
 readme = "README.md"
 repository = "https://github.com/lmmx/pts"
 rust-version = "1.90"
-version = "0.1.0"
+version = "0.1.1"
+
+[package.metadata.binstall]
+pkg-fmt = "tgz"
+pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-{ target }-v{ version }.tar.gz"
+
+[package.metadata.binstall.overrides.aarch64-pc-windows-msvc]
+pkg-fmt = "zip"
+pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-aarch64-pc-windows-msvc-v{ version }.zip"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-x86_64-pc-windows-msvc-v{ version }.zip"
 
 [profile.dev]
 codegen-units = 256
@@ -45,15 +57,3 @@ cargo = "deny"
 [lints.rust]
 unsafe_code = "forbid"
 missing_docs = "deny"
-
-[package.metadata.binstall]
-pkg-fmt = "tgz"
-pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-{ target }-v{ version }.tar.gz"
-
-[package.metadata.binstall.overrides.aarch64-pc-windows-msvc]
-pkg-fmt = "zip"
-pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-aarch64-pc-windows-msvc-v{ version }.zip"
-
-[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
-pkg-fmt = "zip"
-pkg-url = "https://github.com/lmmx/pts/releases/download/pts-v{ version }/pts-x86_64-pc-windows-msvc-v{ version }.zip"
