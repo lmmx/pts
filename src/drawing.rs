@@ -1,3 +1,5 @@
+//! Canvas rendering logic.
+
 use crate::config::Config;
 use crate::persistence::PointShape;
 use crate::state::AppState;

@@ -1,3 +1,5 @@
+//! Point data structures and JSON serialization.
+
 use facet::Facet;
 use std::fs;
 

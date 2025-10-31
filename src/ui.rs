@@ -1,3 +1,5 @@
+//! UI panels and keyboard input handling.
+
 use crate::config::Config;
 use crate::persistence::{self, PointShape};
 use crate::state::{AppState, InteractionMode, PendingMode};

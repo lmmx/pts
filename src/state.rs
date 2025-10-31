@@ -1,3 +1,5 @@
+//! Core application state management including points, selection, and interaction modes.
+
 use crate::persistence::{Point, PointShape};
 use eframe::egui;
 use facet::Facet;

@@ -1,13 +1,5 @@
-//! pts: A point canvas with JSON storage.
-#![allow(clippy::multiple_crate_versions)]
 use eframe::egui;
-
-mod config;
-mod drawing;
-mod interactions;
-mod persistence;
-mod state;
-mod ui;
+use pts::{config, drawing, interactions, persistence, state, ui};
 
 struct PointDragger {
     state: state::AppState,

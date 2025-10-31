@@ -1,3 +1,5 @@
+//! Application configuration and color parsing.
+
 use eframe::egui;
 use facet::Facet;
 

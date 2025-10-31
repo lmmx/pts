@@ -1,3 +1,5 @@
+//! Mouse interaction handlers for different modes.
+
 use eframe::egui;
 use crate::{config, persistence, state};
 
