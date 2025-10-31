@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::persistence::{self, PointShape};
-use crate::state::{AppState, PendingMode};
+use crate::state::{AppState, InteractionMode, PendingMode};
 use eframe::egui;
 
 pub fn show_menu(ctx: &egui::Context, state: &mut AppState) {
@@ -142,19 +142,25 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
     }
 
     if ctx.input(|i| i.key_pressed(egui::Key::B)) {
-        state.box_select_mode = !state.box_select_mode;
-        if !state.box_select_mode {
+        if state.interaction_mode == InteractionMode::BoxSelect {
+            state.interaction_mode = InteractionMode::Normal;
+        } else {
+            state.interaction_mode = InteractionMode::BoxSelect;
             state.box_select_start = None;
             state.box_select_end = None;
         }
     }
 
     if ctx.input(|i| i.key_pressed(egui::Key::P)) {
-        state.paintbrush_mode = !state.paintbrush_mode;
-        state.last_paint_pos = None;
+        if state.interaction_mode == InteractionMode::Paintbrush {
+            state.interaction_mode = InteractionMode::Normal;
+        } else {
+            state.interaction_mode = InteractionMode::Paintbrush;
+            state.last_paint_pos = None;
+        }
     }
 
-    if state.box_select_mode {
+    if state.interaction_mode == InteractionMode::BoxSelect {
         if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
             state.expand_selection_box((-1.0, 0.0), config.point_radius);
         }

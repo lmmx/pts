@@ -41,7 +41,7 @@ impl eframe::App for PointDragger {
                 }
             }
 
-            if self.state.box_select_mode {
+            if self.state.interaction_mode == state::InteractionMode::BoxSelect {
                 if response.drag_started() {
                     if let Some(pos) = response.interact_pointer_pos() {
                         self.state.box_select_start = Some(pos);
@@ -63,7 +63,7 @@ impl eframe::App for PointDragger {
                     self.state.box_select_start = None;
                     self.state.box_select_end = None;
                 }
-            } else if self.state.paintbrush_mode {
+            } else if self.state.interaction_mode == state::InteractionMode::Paintbrush {
                 if response.clicked() || response.dragged() {
                     if let Some(pos) = response.interact_pointer_pos() {
                         self.state.paint_point(

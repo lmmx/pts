@@ -18,19 +18,25 @@ pub enum PendingMode {
     View,
 }
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum InteractionMode {
+    Normal,
+    BoxSelect,
+    Paintbrush,
+}
+
 pub struct AppState {
     pub points: Vec<Point>,
     pub selection: Selection,
     pub dragging: Option<usize>,
     pub pending_mode: PendingMode,
+    pub interaction_mode: InteractionMode,
     pub show_help: bool,
     pub next_id: u64,
     pub box_select_start: Option<egui::Pos2>,
     pub box_select_end: Option<egui::Pos2>,
-    pub box_select_mode: bool,
     pub snap_to_grid: bool,
     pub zoom: f32,
-    pub paintbrush_mode: bool,
     pub last_paint_pos: Option<egui::Pos2>,
 }
 
@@ -47,14 +53,13 @@ impl AppState {
             selection,
             dragging: None,
             pending_mode: PendingMode::None,
+            interaction_mode: InteractionMode::Normal,
             show_help: false,
             next_id,
             box_select_start: None,
             box_select_end: None,
-            box_select_mode: false,
             snap_to_grid: false,
             zoom: 1.0,
-            paintbrush_mode: false,
             last_paint_pos: None,
         }
     }
@@ -274,9 +279,9 @@ impl AppState {
     }
 
     pub fn status_text(&self) -> Option<String> {
-        if self.paintbrush_mode {
+        if self.interaction_mode == InteractionMode::Paintbrush {
             Some("Paintbrush".to_string())
-        } else if self.box_select_mode {
+        } else if self.interaction_mode == InteractionMode::BoxSelect {
             Some("Box Select".to_string())
         } else if self.pending_mode == PendingMode::Clone {
             Some("Clone mode".to_string())
