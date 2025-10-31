@@ -170,13 +170,7 @@ impl AppState {
     pub fn point_in_box(&self, idx: usize, rect: egui::Rect, radius: f32) -> bool {
         let pt = &self.points[idx];
         match pt.shape {
-            PointShape::Circle => {
-                rect.contains(egui::pos2(pt.x - radius, pt.y - radius)) &&
-                rect.contains(egui::pos2(pt.x + radius, pt.y + radius)) &&
-                rect.contains(egui::pos2(pt.x - radius, pt.y + radius)) &&
-                rect.contains(egui::pos2(pt.x + radius, pt.y - radius))
-            }
-            PointShape::Square => {
+            PointShape::Circle | PointShape::Square => {
                 rect.contains(egui::pos2(pt.x - radius, pt.y - radius)) &&
                 rect.contains(egui::pos2(pt.x + radius, pt.y + radius)) &&
                 rect.contains(egui::pos2(pt.x - radius, pt.y + radius)) &&

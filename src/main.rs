@@ -95,8 +95,8 @@ impl eframe::App for PointDragger {
                     }
                 }
 
-                if response.dragged() {
-                    if self.state.dragging.is_some() {
+                if response.dragged()
+                    && self.state.dragging.is_some() {
                         if let Some(pos) = response.interact_pointer_pos() {
                             let selected = self.state.selected_indices();
                             if let Some(drag_idx) = self.state.dragging {
@@ -117,14 +117,12 @@ impl eframe::App for PointDragger {
                             }
                         }
                     }
-                }
 
-                if response.drag_stopped() {
-                    if self.state.dragging.is_some() {
+                if response.drag_stopped()
+                    && self.state.dragging.is_some() {
                         persistence::save_points(&self.state.points);
                         self.state.dragging = None;
                     }
-                }
 
                 if response.clicked() {
                     if let Some(pos) = response.interact_pointer_pos() {

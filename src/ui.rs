@@ -60,7 +60,7 @@ pub fn show_tool_panel(ctx: &egui::Context, config: &Config, _state: &mut AppSta
 fn show_color_swatch(ui: &mut egui::Ui, label: &str, hex: &str, config: &Config) {
     ui.horizontal(|ui| {
         let color = config.parse_color(hex);
-        ui.label(format!("{}: ", label));
+        ui.label(format!("{label}: "));
         let size = egui::vec2(16.0, 16.0);
         let (rect, _) = ui.allocate_exact_size(size, egui::Sense::hover());
         ui.painter().rect_filled(rect, 2.0, color);
