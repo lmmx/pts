@@ -1,5 +1,10 @@
 # Pts
 
+[![crates.io](https://img.shields.io/crates/v/pts.svg)](https://crates.io/crates/pts)
+[![documentation](https://docs.rs/pts/badge.svg)](https://docs.rs/pts)
+[![MIT/Apache-2.0 licensed](https://img.shields.io/crates/l/pts.svg)](./LICENSE)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/lmmx/pts/master.svg)](https://results.pre-commit.ci/latest/github/lmmx/pts/master)
+
 A point canvas with JSON storage
 
 ![](https://github.com/user-attachments/assets/cf84bcc8-a073-4da3-b3df-d19ce2ce9ee3)
@@ -38,11 +43,11 @@ Points can be:
 
 ## Installation
 
-crates.io is still TODO
-
 ```sh
-cargo install --path .
+cargo install pts
 ```
+
+- Cargo binstall installation is still TODO
 
 ## Configuration
 
