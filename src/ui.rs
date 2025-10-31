@@ -5,9 +5,18 @@ use eframe::egui;
 
 pub fn show_status_bar(ctx: &egui::Context, state: &AppState) {
     if let Some(status) = state.status_text() {
-        egui::TopBottomPanel::bottom("status").show(ctx, |ui| {
-            ui.label(status);
-        });
+        egui::Area::new(egui::Id::new("status"))
+            .anchor(egui::Align2::CENTER_BOTTOM, egui::vec2(0.0, -10.0))
+            .show(ctx, |ui| {
+                egui::Frame::none()
+                    .fill(egui::Color32::from_black_alpha(180))
+                    .inner_margin(8.0)
+                    .rounding(4.0)
+                    .show(ui, |ui| {
+                        ui.set_min_width(80.0);
+                        ui.label(egui::RichText::new(status).color(egui::Color32::WHITE).size(16.0));
+                    });
+            });
     }
 }
 
@@ -81,26 +90,51 @@ pub fn show_help_window(ctx: &egui::Context, state: &mut AppState) {
         egui::Window::new("Keyboard Shortcuts")
             .open(&mut state.show_help)
             .show(ctx, |ui| {
+                ui.heading("Interaction Modes");
                 ui.label("B: Toggle box select");
-                ui.label("  In box mode: Arrow keys expand selection");
+                ui.label("  Arrow keys: Expand selection");
                 ui.label("P: Toggle paintbrush mode");
-                ui.label("  In paintbrush: Click/drag to paint points");
+                ui.label("  Click/drag: Paint points");
+
+                ui.add_space(8.0);
+                ui.separator();
+                ui.add_space(8.0);
+
+                ui.heading("Movement");
                 ui.label("Arrow Keys: Move selected point(s)");
                 ui.label("Shift + Arrow: Move by large step");
+
+                ui.add_space(8.0);
+                ui.separator();
+                ui.add_space(8.0);
+
+                ui.heading("Cloning");
                 ui.label("C then C: Clone on top");
                 ui.label("C then Arrow: Clone adjacent");
+
+                ui.add_space(8.0);
+                ui.separator();
+                ui.add_space(8.0);
+
+                ui.heading("Shapes");
                 ui.label("S then C: Set shape to Circle");
                 ui.label("S then S: Set shape to Square");
                 ui.label("S then D: Set shape to Diamond");
                 ui.label("S then H: Set shape to Semicircle");
-                ui.label("X: Delete selected");
+
+                ui.add_space(8.0);
+                ui.separator();
+                ui.add_space(8.0);
+
+                ui.heading("Other");
+                ui.label("D: Delete selected");
                 ui.label("G: Toggle snap-to-grid");
                 ui.label("V then G: Toggle grid visibility");
                 ui.label("Ctrl + Scroll: Zoom");
-                ui.label("?: Show help");
                 ui.label("Ctrl+S: Save");
                 ui.label("Ctrl+O: Load");
                 ui.label("Ctrl+R: Reset");
+                ui.label("?: Show/hide help");
                 ui.label("Q or Escape: Quit");
             });
     }
