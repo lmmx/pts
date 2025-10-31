@@ -140,7 +140,23 @@ pub fn show_help_window(ctx: &egui::Context, state: &mut AppState) {
     }
 }
 
-#[allow(clippy::too_many_lines)]
+fn toggle_mode(current: InteractionMode, target: InteractionMode) -> InteractionMode {
+    if current == target { InteractionMode::Normal } else { target }
+}
+
+fn toggle_pending(current: PendingMode, target: PendingMode) -> PendingMode {
+    if current == target { PendingMode::None } else { target }
+}
+
+fn handle_arrow_keys<F>(ctx: &egui::Context, mut handler: F)
+where F: FnMut(f32, f32)
+{
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) { handler(-1.0, 0.0); }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) { handler(1.0, 0.0); }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) { handler(0.0, -1.0); }
+    if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) { handler(0.0, 1.0); }
+}
+
 pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut Config) {
     let shift = ctx.input(|i| i.modifiers.shift);
     let step = if shift { config.move_step_large } else { config.move_step };
@@ -185,104 +201,57 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
     }
 
     if ctx.input(|i| i.key_pressed(egui::Key::B)) {
-        if state.interaction_mode == InteractionMode::BoxSelect {
-            state.interaction_mode = InteractionMode::Normal;
-        } else {
-            state.interaction_mode = InteractionMode::BoxSelect;
+        state.interaction_mode = toggle_mode(state.interaction_mode, InteractionMode::BoxSelect);
+        if state.interaction_mode == InteractionMode::Normal {
             state.box_select_start = None;
             state.box_select_end = None;
         }
     }
 
     if ctx.input(|i| i.key_pressed(egui::Key::P)) {
+        state.interaction_mode = toggle_mode(state.interaction_mode, InteractionMode::Paintbrush);
         if state.interaction_mode == InteractionMode::Paintbrush {
-            state.interaction_mode = InteractionMode::Normal;
-        } else {
-            state.interaction_mode = InteractionMode::Paintbrush;
             state.last_paint_pos = None;
         }
     }
 
     if state.interaction_mode == InteractionMode::BoxSelect {
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
-            state.expand_selection_box((-1.0, 0.0), config.point_radius);
-        }
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
-            state.expand_selection_box((1.0, 0.0), config.point_radius);
-        }
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
-            state.expand_selection_box((0.0, -1.0), config.point_radius);
-        }
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
-            state.expand_selection_box((0.0, 1.0), config.point_radius);
-        }
+        handle_arrow_keys(ctx, |dx, dy| {
+            state.expand_selection_box((dx, dy), config.point_radius);
+        });
     } else if ctx.input(|i| i.key_pressed(egui::Key::S)) {
         if state.pending_mode == PendingMode::Shape {
             state.set_selected_shape(PointShape::Square);
-            state.pending_mode = PendingMode::None;
-        } else {
-            state.pending_mode = PendingMode::Shape;
         }
+        state.pending_mode = toggle_pending(state.pending_mode, PendingMode::Shape);
     } else if state.pending_mode == PendingMode::Shape {
-        if ctx.input(|i| i.key_pressed(egui::Key::C)) {
-            state.set_selected_shape(PointShape::Circle);
-            state.pending_mode = PendingMode::None;
-        } else if ctx.input(|i| i.key_pressed(egui::Key::D)) {
-            state.set_selected_shape(PointShape::Diamond);
-            state.pending_mode = PendingMode::None;
-        } else if ctx.input(|i| i.key_pressed(egui::Key::H)) {
-            state.set_selected_shape(PointShape::Semicircle);
+        let shape = match () {
+            () if ctx.input(|i| i.key_pressed(egui::Key::C)) => Some(PointShape::Circle),
+            () if ctx.input(|i| i.key_pressed(egui::Key::D)) => Some(PointShape::Diamond),
+            () if ctx.input(|i| i.key_pressed(egui::Key::H)) => Some(PointShape::Semicircle),
+            () => None,
+        };
+        if let Some(shape) = shape {
+            state.set_selected_shape(shape);
             state.pending_mode = PendingMode::None;
         }
     } else if ctx.input(|i| i.key_pressed(egui::Key::C)) {
         if state.pending_mode == PendingMode::Clone {
             state.clone_selected(0.0, 0.0);
-            state.pending_mode = PendingMode::None;
-        } else {
-            state.pending_mode = PendingMode::Clone;
         }
+        state.pending_mode = toggle_pending(state.pending_mode, PendingMode::Clone);
     } else if state.pending_mode == PendingMode::Clone {
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
-            let (dx, dy) = state.convex_hull_offset((-1.0, 0.0), config.point_radius);
+        handle_arrow_keys(ctx, |dx, dy| {
+            let (dx, dy) = state.convex_hull_offset((dx, dy), config.point_radius);
             state.clone_selected(dx, dy);
             state.pending_mode = PendingMode::None;
-        } else if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
-            let (dx, dy) = state.convex_hull_offset((1.0, 0.0), config.point_radius);
-            state.clone_selected(dx, dy);
-            state.pending_mode = PendingMode::None;
-        } else if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
-            let (dx, dy) = state.convex_hull_offset((0.0, -1.0), config.point_radius);
-            state.clone_selected(dx, dy);
-            state.pending_mode = PendingMode::None;
-        } else if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
-            let (dx, dy) = state.convex_hull_offset((0.0, 1.0), config.point_radius);
-            state.clone_selected(dx, dy);
-            state.pending_mode = PendingMode::None;
-        }
+        });
     } else {
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
-            state.move_selected(-step, 0.0);
+        handle_arrow_keys(ctx, |dx, dy| {
+            state.move_selected(dx * step, dy * step);
             if state.snap_to_grid {
                 state.snap_to_grid(config.grid_spacing, config.point_radius);
             }
-        }
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
-            state.move_selected(step, 0.0);
-            if state.snap_to_grid {
-                state.snap_to_grid(config.grid_spacing, config.point_radius);
-            }
-        }
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
-            state.move_selected(0.0, -step);
-            if state.snap_to_grid {
-                state.snap_to_grid(config.grid_spacing, config.point_radius);
-            }
-        }
-        if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
-            state.move_selected(0.0, step);
-            if state.snap_to_grid {
-                state.snap_to_grid(config.grid_spacing, config.point_radius);
-            }
-        }
+        });
     }
 }
