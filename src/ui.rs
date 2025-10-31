@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::persistence::{self, PointShape};
-use crate::state::AppState;
+use crate::state::{AppState, PendingMode};
 use eframe::egui;
 
 pub fn show_menu(ctx: &egui::Context, state: &mut AppState) {
@@ -103,18 +103,18 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
     let step = if shift { config.move_step_large } else { config.move_step };
 
     if ctx.input(|i| i.key_pressed(egui::Key::G)) {
-        if state.pending_view {
+        if state.pending_mode == PendingMode::View {
             config.grid_enabled = !config.grid_enabled;
-            state.pending_view = false;
+            state.pending_mode = PendingMode::None;
         } else {
             state.snap_to_grid = !state.snap_to_grid;
         }
     }
 
     if ctx.input(|i| i.key_pressed(egui::Key::V)) {
-        state.pending_view = true;
+        state.pending_mode = PendingMode::View;
     } else if !ctx.input(|i| i.key_down(egui::Key::G)) {
-        state.pending_view = false;
+        state.pending_mode = PendingMode::None;
     }
 
     if ctx.input(|i| i.key_pressed(egui::Key::Questionmark)) {
@@ -168,47 +168,47 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
             state.expand_selection_box((0.0, 1.0), config.point_radius);
         }
     } else if ctx.input(|i| i.key_pressed(egui::Key::S)) {
-        if state.pending_shape {
+        if state.pending_mode == PendingMode::Shape {
             state.set_selected_shape(PointShape::Square);
-            state.pending_shape = false;
+            state.pending_mode = PendingMode::None;
         } else {
-            state.pending_shape = true;
+            state.pending_mode = PendingMode::Shape;
         }
-    } else if state.pending_shape {
+    } else if state.pending_mode == PendingMode::Shape {
         if ctx.input(|i| i.key_pressed(egui::Key::C)) {
             state.set_selected_shape(PointShape::Circle);
-            state.pending_shape = false;
+            state.pending_mode = PendingMode::None;
         } else if ctx.input(|i| i.key_pressed(egui::Key::D)) {
             state.set_selected_shape(PointShape::Diamond);
-            state.pending_shape = false;
+            state.pending_mode = PendingMode::None;
         } else if ctx.input(|i| i.key_pressed(egui::Key::H)) {
             state.set_selected_shape(PointShape::Semicircle);
-            state.pending_shape = false;
+            state.pending_mode = PendingMode::None;
         }
     } else if ctx.input(|i| i.key_pressed(egui::Key::C)) {
-        if state.pending_clone {
+        if state.pending_mode == PendingMode::Clone {
             state.clone_selected(0.0, 0.0);
-            state.pending_clone = false;
+            state.pending_mode = PendingMode::None;
         } else {
-            state.pending_clone = true;
+            state.pending_mode = PendingMode::Clone;
         }
-    } else if state.pending_clone {
+    } else if state.pending_mode == PendingMode::Clone {
         if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {
             let (dx, dy) = state.convex_hull_offset((-1.0, 0.0), config.point_radius);
             state.clone_selected(dx, dy);
-            state.pending_clone = false;
+            state.pending_mode = PendingMode::None;
         } else if ctx.input(|i| i.key_pressed(egui::Key::ArrowRight)) {
             let (dx, dy) = state.convex_hull_offset((1.0, 0.0), config.point_radius);
             state.clone_selected(dx, dy);
-            state.pending_clone = false;
+            state.pending_mode = PendingMode::None;
         } else if ctx.input(|i| i.key_pressed(egui::Key::ArrowUp)) {
             let (dx, dy) = state.convex_hull_offset((0.0, -1.0), config.point_radius);
             state.clone_selected(dx, dy);
-            state.pending_clone = false;
+            state.pending_mode = PendingMode::None;
         } else if ctx.input(|i| i.key_pressed(egui::Key::ArrowDown)) {
             let (dx, dy) = state.convex_hull_offset((0.0, 1.0), config.point_radius);
             state.clone_selected(dx, dy);
-            state.pending_clone = false;
+            state.pending_mode = PendingMode::None;
         }
     } else {
         if ctx.input(|i| i.key_pressed(egui::Key::ArrowLeft)) {

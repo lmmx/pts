@@ -10,13 +10,19 @@ pub enum Selection {
     Multiple(Vec<usize>),
 }
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum PendingMode {
+    None,
+    Clone,
+    Shape,
+    View,
+}
+
 pub struct AppState {
     pub points: Vec<Point>,
     pub selection: Selection,
     pub dragging: Option<usize>,
-    pub pending_clone: bool,
-    pub pending_shape: bool,
-    pub pending_view: bool,
+    pub pending_mode: PendingMode,
     pub show_help: bool,
     pub next_id: u64,
     pub box_select_start: Option<egui::Pos2>,
@@ -40,9 +46,7 @@ impl AppState {
             points,
             selection,
             dragging: None,
-            pending_clone: false,
-            pending_shape: false,
-            pending_view: false,
+            pending_mode: PendingMode::None,
             show_help: false,
             next_id,
             box_select_start: None,
@@ -274,9 +278,9 @@ impl AppState {
             Some("Paintbrush".to_string())
         } else if self.box_select_mode {
             Some("Box Select".to_string())
-        } else if self.pending_clone {
+        } else if self.pending_mode == PendingMode::Clone {
             Some("Clone mode".to_string())
-        } else if self.pending_shape {
+        } else if self.pending_mode == PendingMode::Shape {
             Some("Shape mode".to_string())
         } else if self.snap_to_grid {
             Some("Snap to Grid".to_string())
