@@ -80,8 +80,10 @@ move_step_large = 8.0
 - <kbd>C</kbd> then <kbd>Arrow</kbd>: Clone adjacent (offset by bounding box size)
 
 ### Shapes
-- <kbd>S</kbd> then <kbd></kbd>S: Set selected points to square
-- <kbd>S</kbd> then <kbd></kbd>C: Set selected points to circle
+- <kbd>S</kbd> then <kbd>S</kbd>: Set selected points to square
+- <kbd>S</kbd> then <kbd>C</kbd>: Set selected points to circle
+- <kbd>S</kbd> then <kbd>D</kbd>: Set selected points to diamond
+- <kbd>S</kbd> then <kbd>H</kbd>: Set selected points to semi-circle (half-circle)
 
 ### View
 - <kbd>G</kbd>: Toggle snap-to-grid mode
