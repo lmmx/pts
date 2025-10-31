@@ -3,6 +3,14 @@ use crate::persistence::{self, PointShape};
 use crate::state::{AppState, InteractionMode, PendingMode};
 use eframe::egui;
 
+pub fn show_status_bar(ctx: &egui::Context, state: &AppState) {
+    if let Some(status) = state.status_text() {
+        egui::TopBottomPanel::bottom("status").show(ctx, |ui| {
+            ui.label(status);
+        });
+    }
+}
+
 pub fn show_menu(ctx: &egui::Context, state: &mut AppState) {
     egui::TopBottomPanel::top("menu").show(ctx, |ui| {
         egui::menu::bar(ui, |ui| {
