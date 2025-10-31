@@ -74,9 +74,9 @@ pub fn show_tool_panel(ctx: &egui::Context, config: &Config, _state: &mut AppSta
     });
 }
 
-fn show_color_swatch(ui: &mut egui::Ui, label: &str, hex: &str, config: &Config) {
+fn show_color_swatch(ui: &mut egui::Ui, label: &str, hex: &str, _config: &Config) {
     ui.horizontal(|ui| {
-        let color = config.parse_color(hex);
+        let color = Config::parse_colour(hex);
         ui.label(format!("{label}: "));
         let size = egui::vec2(16.0, 16.0);
         let (rect, _) = ui.allocate_exact_size(size, egui::Sense::hover());
@@ -140,6 +140,7 @@ pub fn show_help_window(ctx: &egui::Context, state: &mut AppState) {
     }
 }
 
+#[allow(clippy::too_many_lines)]
 pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut Config) {
     let shift = ctx.input(|i| i.modifiers.shift);
     let step = if shift { config.move_step_large } else { config.move_step };

@@ -1,4 +1,5 @@
 //! pts: A point canvas with JSON storage.
+#![allow(clippy::multiple_crate_versions)]
 use eframe::egui;
 
 mod config;
@@ -28,7 +29,7 @@ impl eframe::App for PointDragger {
         ui::show_menu(ctx, &mut self.state);
         ui::show_tool_panel(ctx, &self.config, &mut self.state);
         ui::show_help_window(ctx, &mut self.state);
-        ui::show_status_bar(ctx, &mut self.state);
+        ui::show_status_bar(ctx, &self.state);
         ui::handle_keyboard(ctx, &mut self.state, &mut self.config);
 
         egui::CentralPanel::default().show(ctx, |ui| {

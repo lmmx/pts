@@ -3,7 +3,7 @@ use std::fs;
 
 const POINTS_FILE: &str = "points.json";
 
-#[derive(Facet, Clone)]
+#[derive(Copy, Facet, Clone)]
 #[repr(u8)]
 pub enum PointShape {
     Circle,

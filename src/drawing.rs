@@ -13,7 +13,7 @@ pub fn draw_canvas(
         egui::Sense::click_and_drag(),
     );
 
-    let bg = config.parse_color(&config.bg_color);
+    let bg = Config::parse_colour(&config.bg_color);
     painter.rect_filled(response.rect, 0.0, bg);
 
     if config.grid_enabled {
@@ -26,7 +26,7 @@ pub fn draw_canvas(
 }
 
 fn draw_grid(painter: &egui::Painter, rect: &egui::Rect, config: &Config) {
-    let grid_color = config.parse_color(&config.grid_color);
+    let grid_color = Config::parse_colour(&config.grid_color);
     let spacing = config.grid_spacing;
 
     let mut x = (rect.min.x / spacing).ceil() * spacing;
@@ -48,9 +48,10 @@ fn draw_grid(painter: &egui::Painter, rect: &egui::Rect, config: &Config) {
     }
 }
 
+#[allow(clippy::cast_precision_loss)]
 fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
-    let point_color = config.parse_color(&config.point_color);
-    let selected_color = config.parse_color(&config.selected_color);
+    let point_color = Config::parse_colour(&config.point_color);
+    let selected_color = Config::parse_colour(&config.selected_color);
     let selected_indices = state.selected_indices();
 
     for (i, pt) in state.points.iter().enumerate() {
@@ -111,7 +112,7 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
     }
 
     if let (Some(start), Some(end)) = (state.box_select_start, state.box_select_end) {
-        let box_color = config.parse_color(&config.selection_box_color);
+        let box_color = Config::parse_colour(&config.selection_box_color);
         let rect = egui::Rect::from_two_pos(start, end);
         painter.rect_stroke(rect, 0.0, egui::Stroke::new(2.0, box_color));
     }

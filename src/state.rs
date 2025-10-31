@@ -133,7 +133,7 @@ impl AppState {
                 id: self.next_id,
                 x: pt.x + dx,
                 y: pt.y + dy,
-                shape: pt.shape.clone(),
+                shape: pt.shape,
             });
             self.next_id += 1;
         }
@@ -150,7 +150,7 @@ impl AppState {
 
     pub fn set_selected_shape(&mut self, shape: PointShape) {
         for idx in self.selected_indices() {
-            self.points[idx].shape = shape.clone();
+            self.points[idx].shape = shape;
         }
     }
 
@@ -296,10 +296,10 @@ impl AppState {
 
     pub fn get_paint_shape(&self) -> PointShape {
         match &self.selection {
-            Selection::Single(idx) => self.points[*idx].shape.clone(),
+            Selection::Single(idx) => self.points[*idx].shape,
             Selection::Multiple(indices) => {
                 if let Some(idx) = indices.first() {
-                    self.points[*idx].shape.clone()
+                    self.points[*idx].shape
                 } else {
                     PointShape::Circle
                 }
