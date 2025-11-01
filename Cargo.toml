@@ -21,7 +21,7 @@ name = "pts"
 readme = "README.md"
 repository = "https://github.com/lmmx/pts"
 rust-version = "1.90"
-version = "0.1.1"
+version = "0.1.2"
 
 [package.metadata.binstall]
 pkg-fmt = "tgz"
