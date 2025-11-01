@@ -1,4 +1,5 @@
 ci_opt := if env("PRE_COMMIT_HOME", "") != "" { "-ci" } else { "" }
+pc_cmd := if env("PRE_COMMIT_HOME", "") != "" { "pre-commit" } else { "prek" }
 
 precommit:
     just pc{{ci_opt}}
@@ -18,15 +19,15 @@ prepush-rs:
 fmt:     code-quality-fix
 
 full:    pc prepush build test
-full-ci: pc-ci prepush        
+full-ci: pc-ci prepush
 
 # -------------------------------------
 
 install-hooks:
-   pre-commit install
+   {{pc_cmd}} install
 
 run-pc:
-   pre-commit run --all-files
+   {{pc_cmd}} run --all-files
 
 # -------------------------------------
 
@@ -57,19 +58,6 @@ code-quality-fix:
     just fix-eof-ws
     cargo machete
     cargo fmt --all
-
-# -------------------------------------
-
-build:
-    cargo build --all-features
-
-check:
-    cargo check --all-features
-
-# -------------------------------------
-
-clippy:
-    cargo clippy --all-targets --all-features --target-dir target/clippy-all-features -- -D warnings
 
 # -------------------------------------
 

@@ -64,18 +64,16 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
             }
             PointShape::Square => {
                 let half = config.point_radius;
-                let corners = [
-                    (-half, -half),
-                    (half, -half),
-                    (half, half),
-                    (-half, half),
-                ];
+                let corners = [(-half, -half), (half, -half), (half, half), (-half, half)];
 
-                let rotated_corners: Vec<egui::Pos2> = corners.iter().map(|(x, y)| {
-                    let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
-                    let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
-                    egui::pos2(pos.x + rotated_x, pos.y + rotated_y)
-                }).collect();
+                let rotated_corners: Vec<egui::Pos2> = corners
+                    .iter()
+                    .map(|(x, y)| {
+                        let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
+                        let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
+                        egui::pos2(pos.x + rotated_x, pos.y + rotated_y)
+                    })
+                    .collect();
 
                 painter.add(egui::Shape::convex_polygon(
                     rotated_corners,
@@ -85,18 +83,16 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
             }
             PointShape::Diamond => {
                 let r = config.point_radius;
-                let corners = [
-                    (0.0, -r),
-                    (r, 0.0),
-                    (0.0, r),
-                    (-r, 0.0),
-                ];
+                let corners = [(0.0, -r), (r, 0.0), (0.0, r), (-r, 0.0)];
 
-                let rotated_corners: Vec<egui::Pos2> = corners.iter().map(|(x, y)| {
-                    let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
-                    let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
-                    egui::pos2(pos.x + rotated_x, pos.y + rotated_y)
-                }).collect();
+                let rotated_corners: Vec<egui::Pos2> = corners
+                    .iter()
+                    .map(|(x, y)| {
+                        let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
+                        let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
+                        egui::pos2(pos.x + rotated_x, pos.y + rotated_y)
+                    })
+                    .collect();
 
                 painter.add(egui::Shape::convex_polygon(
                     rotated_corners,

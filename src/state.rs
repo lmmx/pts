@@ -130,7 +130,7 @@ impl AppState {
                 x: pt.x + dx,
                 y: pt.y + dy,
                 shape: pt.shape,
-                rotation: pt.rotation,  // ADD THIS LINE
+                rotation: pt.rotation, // ADD THIS LINE
             });
             self.next_id += 1;
         }

@@ -24,7 +24,7 @@ ship:
     # 🔍 Dry-run release...
     just publish --dry-run
     # ✅ Dry-run went OK, proceeding to real release
-    
+
     # 🦀 Update Cargo.toml versions and changelogs
     release-plz update
     git add .

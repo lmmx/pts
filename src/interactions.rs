@@ -1,7 +1,7 @@
 //! Mouse interaction handlers for different modes.
 
-use eframe::egui;
 use crate::{config, persistence, state};
+use eframe::egui;
 
 pub fn box_select(state: &mut state::AppState, config: &config::Config, response: &egui::Response) {
     if response.drag_started() {
@@ -30,7 +30,13 @@ pub fn box_select(state: &mut state::AppState, config: &config::Config, response
 pub fn paintbrush(state: &mut state::AppState, config: &config::Config, response: &egui::Response) {
     if response.clicked() || response.dragged() {
         if let Some(pos) = response.interact_pointer_pos() {
-            state.paint_point(pos, config.point_radius, config.move_step, config.grid_spacing, state.snap_to_grid);
+            state.paint_point(
+                pos,
+                config.point_radius,
+                config.move_step,
+                config.grid_spacing,
+                state.snap_to_grid,
+            );
         }
     }
 
