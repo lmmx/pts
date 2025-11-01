@@ -48,3 +48,27 @@ publish mode="":
     ## 🦀 Let release-plz handle workspace crate tagging
     ## It will create tags like: genson-core-v0.2.1, genson-cli-v0.1.5, etc.
     release-plz release --backend github --git-token $git_token {{mode}}
+
+# For when release-plz isn't working
+ship-manual:
+    #!/usr/bin/env -S echo-comment --shell-flags="-euo pipefail" --color="\\033[38;5;202m"
+
+    # Bump patch version
+    cargo set-version --bump patch
+
+    # Commit and tag
+    git add .
+    git commit -m "chore(release): 🦀 Upgrades"
+
+    version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name=="pts") | .version')
+    git tag pts-v${version}
+
+    # Push to remote
+    git push
+    git push --tags
+
+    # Create GitHub release with changelog
+    gh release create pts-v${version} --title "pts-v${version}" --notes-file <(sed -n "/## \[${version}\]/,/## \[/p" CHANGELOG.md | sed '1d;$d')
+
+    # Publish
+    cargo publish
