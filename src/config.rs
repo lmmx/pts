@@ -28,6 +28,10 @@ pub struct Config {
 }
 
 impl Config {
+    #[must_use]
+    /// # Panics
+    ///
+    /// May panic if the config TOML is invalid TODO (fix)
     pub fn load() -> Self {
         if let Ok(contents) = std::fs::read_to_string("config.toml") {
             if let Ok(config) = facet_toml::from_str::<Config>(&contents) {
@@ -37,6 +41,7 @@ impl Config {
         facet_toml::from_str::<Config>("").unwrap()
     }
 
+    #[must_use]
     pub fn parse_colour(hex: &str) -> egui::Color32 {
         let hex = hex.trim_start_matches('#');
         let r = u8::from_str_radix(&hex[0..2], 16).unwrap_or(0);

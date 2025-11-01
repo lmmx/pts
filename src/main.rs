@@ -1,3 +1,4 @@
+#![allow(clippy::multiple_crate_versions)]
 use eframe::egui;
 use pts::{config, drawing, interactions, persistence, state, ui};
 

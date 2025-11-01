@@ -43,6 +43,7 @@ pub struct AppState {
 }
 
 impl AppState {
+    #[must_use]
     pub fn new(points: Vec<Point>) -> Self {
         let next_id = points.iter().map(|p| p.id).max().unwrap_or(0) + 1;
         let selection = if points.is_empty() {
@@ -66,6 +67,7 @@ impl AppState {
         }
     }
 
+    #[must_use]
     pub fn point_at_pos(&self, pos: egui::Pos2, radius: f32) -> Option<usize> {
         self.points.iter().position(|pt| {
             let dx = pos.x - pt.x;
@@ -74,6 +76,7 @@ impl AppState {
         })
     }
 
+    #[must_use]
     pub fn selected_indices(&self) -> Vec<usize> {
         match &self.selection {
             Selection::None => vec![],
@@ -115,6 +118,7 @@ impl AppState {
         }
     }
 
+    #[must_use]
     pub fn quantize_position(pos: f32, step: f32) -> f32 {
         (pos / step).round() * step
     }
@@ -151,6 +155,9 @@ impl AppState {
         }
     }
 
+    /// # Panics
+    ///
+    /// May panic when unwrapping the max idx (?) TODO investigate
     pub fn delete_selected(&mut self) {
         let indices = self.selected_indices();
         if indices.is_empty() {
@@ -173,6 +180,7 @@ impl AppState {
         }
     }
 
+    #[must_use]
     pub fn point_in_box(&self, idx: usize, rect: egui::Rect, radius: f32) -> bool {
         let pt = &self.points[idx];
         match pt.shape {
@@ -208,6 +216,7 @@ impl AppState {
         };
     }
 
+    #[must_use]
     pub fn convex_hull_offset(&self, direction: (f32, f32), radius: f32) -> (f32, f32) {
         let indices = self.selected_indices();
         if indices.is_empty() {
@@ -275,6 +284,7 @@ impl AppState {
         };
     }
 
+    #[must_use]
     pub fn status_text(&self) -> Option<String> {
         if self.interaction_mode == InteractionMode::Paintbrush {
             Some("Paintbrush".to_string())
@@ -291,6 +301,7 @@ impl AppState {
         }
     }
 
+    #[must_use]
     pub fn get_paint_shape(&self) -> PointShape {
         match &self.selection {
             Selection::Single(idx) => self.points[*idx].shape,
@@ -358,6 +369,7 @@ impl AppState {
         }
     }
 
+    #[must_use]
     pub fn get_paint_rotation(&self) -> f32 {
         match &self.selection {
             Selection::Single(idx) => self.points[*idx].rotation,

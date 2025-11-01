@@ -29,6 +29,7 @@ struct Points {
     points: Vec<Point>,
 }
 
+#[must_use]
 pub fn load_points() -> Vec<Point> {
     let _ = fs::remove_file(POINTS_FILE);
     vec![
