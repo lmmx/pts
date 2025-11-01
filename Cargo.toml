@@ -10,12 +10,12 @@ facet-toml = "0.30"
 
 [package]
 authors = ["Louis Maddox <louismmx@gmail.com>"]
-categories = ["gui", "graphics"]
+categories = ["graphics", "gui"]
 description = "GUI to create, manipulate, and arrange points on a canvas"
 documentation = "https://docs.rs/pts/"
 edition = "2021"
 homepage = "https://github.com/lmmx/pts"
-keywords = ["gui", "egui", "canvas", "points", "drawing"]
+keywords = ["canvas", "drawing", "egui", "gui", "points"]
 license = "MIT"
 name = "pts"
 readme = "README.md"
@@ -51,8 +51,8 @@ strip = "symbols"
 
 [lints.clippy]
 all = "deny"
-pedantic = "deny"
 cargo = "deny"
+pedantic = "deny"
 
 [lints.rust]
 unsafe_code = "forbid"
