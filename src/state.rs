@@ -130,6 +130,7 @@ impl AppState {
                 x: pt.x + dx,
                 y: pt.y + dy,
                 shape: pt.shape,
+                rotation: pt.rotation,  // ADD THIS LINE
             });
             self.next_id += 1;
         }
@@ -325,11 +326,13 @@ impl AppState {
         }
 
         let shape = self.get_paint_shape();
+        let rotation = self.get_paint_rotation();
         let new_point = Point {
             id: self.next_id,
             x: quantized_x,
             y: quantized_y,
             shape,
+            rotation,
         };
 
         self.next_id += 1;
@@ -344,5 +347,28 @@ impl AppState {
         }
 
         self.last_paint_pos = Some(egui::pos2(quantized_x, quantized_y));
+    }
+
+    pub fn rotate_selected(&mut self, angle: f32) {
+        for idx in self.selected_indices() {
+            let pt = &mut self.points[idx];
+            pt.rotation += angle;
+            // Normalize to 0..2π range
+            pt.rotation = pt.rotation.rem_euclid(2.0 * std::f32::consts::PI);
+        }
+    }
+
+    pub fn get_paint_rotation(&self) -> f32 {
+        match &self.selection {
+            Selection::Single(idx) => self.points[*idx].rotation,
+            Selection::Multiple(indices) => {
+                if let Some(idx) = indices.first() {
+                    self.points[*idx].rotation
+                } else {
+                    0.0
+                }
+            }
+            Selection::None => 0.0,
+        }
     }
 }

@@ -135,6 +135,14 @@ pub fn show_help_window(ctx: &egui::Context, state: &mut AppState) {
                 ui.separator();
                 ui.add_space(8.0);
 
+                ui.heading("Rotation");
+                ui.label("R: Rotate semicircle clockwise (15°)");
+                ui.label("Shift + R: Rotate semicircle counter-clockwise (15°)");
+
+                ui.add_space(8.0);
+                ui.separator();
+                ui.add_space(8.0);
+
                 ui.heading("Other");
                 ui.label("D: Delete selected");
                 ui.label("G: Toggle snap-to-grid");
@@ -190,6 +198,19 @@ pub fn handle_keyboard(ctx: &egui::Context, state: &mut AppState, config: &mut C
     } else {
         config.move_step
     };
+
+    if ctx.input(|i| i.key_pressed(egui::Key::R)) {
+        // Rotation angle: 45 degrees = π/4 radians
+        let rotation_angle = std::f32::consts::PI / 4.0;
+        if shift {
+            // Counter-clockwise
+            state.rotate_selected(-rotation_angle);
+        } else {
+            // Clockwise
+            state.rotate_selected(rotation_angle);
+        }
+        persistence::save_points(&state.points);
+    }
 
     if ctx.input(|i| i.key_pressed(egui::Key::G)) {
         if state.pending_mode == PendingMode::View {

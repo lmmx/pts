@@ -64,35 +64,63 @@ fn draw_points(painter: &egui::Painter, state: &AppState, config: &Config) {
             }
             PointShape::Square => {
                 let half = config.point_radius;
-                let rect = egui::Rect::from_center_size(pos, egui::vec2(half * 2.0, half * 2.0));
-                painter.rect_filled(rect, 0.0, color);
+                let corners = [
+                    (-half, -half),
+                    (half, -half),
+                    (half, half),
+                    (-half, half),
+                ];
+
+                let rotated_corners: Vec<egui::Pos2> = corners.iter().map(|(x, y)| {
+                    let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
+                    let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
+                    egui::pos2(pos.x + rotated_x, pos.y + rotated_y)
+                }).collect();
+
+                painter.add(egui::Shape::convex_polygon(
+                    rotated_corners,
+                    color,
+                    egui::Stroke::NONE,
+                ));
             }
             PointShape::Diamond => {
                 let r = config.point_radius;
-                let points = vec![
-                    egui::pos2(pos.x, pos.y - r),
-                    egui::pos2(pos.x + r, pos.y),
-                    egui::pos2(pos.x, pos.y + r),
-                    egui::pos2(pos.x - r, pos.y),
+                let corners = [
+                    (0.0, -r),
+                    (r, 0.0),
+                    (0.0, r),
+                    (-r, 0.0),
                 ];
+
+                let rotated_corners: Vec<egui::Pos2> = corners.iter().map(|(x, y)| {
+                    let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
+                    let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
+                    egui::pos2(pos.x + rotated_x, pos.y + rotated_y)
+                }).collect();
+
                 painter.add(egui::Shape::convex_polygon(
-                    points,
+                    rotated_corners,
                     color,
                     egui::Stroke::NONE,
                 ));
             }
             PointShape::Semicircle => {
                 let r = config.point_radius;
-                let segments = 16; // More segments = smoother curve
+                let segments = 16;
 
                 let mut points = Vec::new();
 
-                // Create semi-circle from 0 to π (top half) or π to 2π (bottom half)
+                // Create semi-circle from 0 to π
                 for i in 0..=segments {
-                    let angle = std::f32::consts::PI * i as f32 / segments as f32; // 0 to π for top half
-                    let x = pos.x + r * angle.cos();
-                    let y = pos.y - r * angle.sin(); // negative for top half
-                    points.push(egui::pos2(x, y));
+                    let angle = std::f32::consts::PI * i as f32 / segments as f32;
+                    let x = r * angle.cos();
+                    let y = -r * angle.sin();
+
+                    // Apply rotation
+                    let rotated_x = x * pt.rotation.cos() - y * pt.rotation.sin();
+                    let rotated_y = x * pt.rotation.sin() + y * pt.rotation.cos();
+
+                    points.push(egui::pos2(pos.x + rotated_x, pos.y + rotated_y));
                 }
 
                 painter.add(egui::Shape::convex_polygon(
