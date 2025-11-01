@@ -1,9 +1,3 @@
-## Roadmap
-
-See issue 34 which is the roadmap/prioritisation doc
-
-- https://github.com/lmmx/polars-genson/issues/34
-
 ## Prek/pre-commit
 
 Pre-commit tools bundle all the dependencies for CI and you can just run these and execute
